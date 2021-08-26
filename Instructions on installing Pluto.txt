@@ -1,3 +1,0 @@
-How to run Julia notebook (Pluto)
-
-https://computationalthinking.mit.edu/Fall20/installation/

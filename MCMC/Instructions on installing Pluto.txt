@@ -1,0 +1,7 @@
+How to run Julia notebook (Pluto)
+
+1. Install Julia and Pluto (check the link)
+
+https://computationalthinking.mit.edu/Fall20/installation/
+
+2. Open MLRG_MCMC.jl as a notebook in Pluto
