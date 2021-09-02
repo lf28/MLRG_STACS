@@ -16,6 +16,22 @@ begin
 	using LinearAlgebra
 end
 
+# ╔═╡ fef01c13-fc9e-45f7-9959-0a740f27b458
+md"""
+## Some quick questions to think about
+
+1. When shall we use MCMC ? What are the assumptions or the problem setting that MCMC is appropriate ? 
+
+2. What Markov Chain mean in MCMC? What is Monte Carlo ?
+
+
+3. How do you estimate $\pi$ by using a uniform distributed random variable $\boldsymbol{x} \in [0,1]^2$ ? Is this a MCMC method ?
+
+
+4. To make Bayesian inference on a logistic regression model; what is the model ? what inference options do you we have ? Do we need to use MCMC ?
+
+"""
+
 # ╔═╡ 797629b6-0669-11ec-3778-d1f20c3d6a4c
 md"""# MCMC: exercises
 - Lei Fang 25/08/2021
@@ -213,7 +229,8 @@ You are given data set $D_{4b}$, a sample of N blood count observations. The sen
 """
 
 # ╔═╡ Cell order:
-# ╟─71d93c0d-0e4a-4684-8a54-6e25c2606a2b
+# ╠═71d93c0d-0e4a-4684-8a54-6e25c2606a2b
+# ╟─fef01c13-fc9e-45f7-9959-0a740f27b458
 # ╟─797629b6-0669-11ec-3778-d1f20c3d6a4c
 # ╟─4570ae10-8419-4af4-aea6-c5fc05756617
 # ╠═13cb28fb-6b72-4ccf-9a2e-aec107ccd04b
