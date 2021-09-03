@@ -22,6 +22,7 @@ md"""
 
 1. When shall we use MCMC ? What are the assumptions or the problem setting that MCMC is appropriate ? 
 
+
 2. What Markov Chain mean in MCMC? What is Monte Carlo ?
 
 
@@ -233,7 +234,7 @@ You are given data set $D_{4b}$, a sample of N blood count observations. The sen
 # ╟─fef01c13-fc9e-45f7-9959-0a740f27b458
 # ╟─797629b6-0669-11ec-3778-d1f20c3d6a4c
 # ╟─4570ae10-8419-4af4-aea6-c5fc05756617
-# ╠═13cb28fb-6b72-4ccf-9a2e-aec107ccd04b
+# ╟─13cb28fb-6b72-4ccf-9a2e-aec107ccd04b
 # ╟─92d4bbd4-a7c1-426a-8c26-a40a4cb37cff
 # ╟─c900698d-577d-4d42-bee5-823724771d38
 # ╠═d6a367e4-3a76-4a21-85ee-36cafc2a4749
