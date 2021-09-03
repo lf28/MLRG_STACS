@@ -67,8 +67,8 @@ Therefore, $\hat{\pi} = \frac{4}{m} \sum_{i=1}^m I(\sqrt{(\boldsymbol{x}^{(i)})^
 
 # ╔═╡ 0848f104-2a35-424f-8706-1fc5ab010481
 begin
-	nsize = [50, 100, 1000, 5000]
-	ntimes = 1
+	nsize = [50, 100, 5000]
+	ntimes = 10
 	πs = zeros(ntimes, length(nsize))
 	for n_ in 1:length(nsize)
 		for i in 1:ntimes
@@ -78,13 +78,7 @@ begin
 end
 
 # ╔═╡ 63f5918c-fa02-4abf-a657-807506593f14
-mean(πs[:,3])
-
-# ╔═╡ 6a47c14a-d549-4dc3-b7b0-47f27d41cce9
-begin
-	plot(nsize, mean(πs, dims=1)[:],  label="π monte carlo est.")
-	hline!([π], label="true π")
-end
+mean(πs, dims=1)
 
 # ╔═╡ 9369c5db-79a0-4667-b6f3-583d720dee72
 begin
@@ -161,55 +155,55 @@ end
 begin
 	xx = collect(-10:0.1:20)
 	postxx = posterior1.(xx; logP=false)
-# 	p1=plot(xx, postxx/1.5, linewidth=2, label="I=100")
-# 	histogram!(p1, mcsample[1:100], bins = 80, normalize=true, label="")
-# 	p2=plot(xx, postxx/1.5, linewidth=2, label="I=500")
-# 	histogram!(p2, mcsample[1:500], bins = 100, normalize=true, label="")
+	p1=plot(xx, postxx/1.5, linewidth=2, label="I=100")
+	histogram!(p1, mcsample[1:100], bins = 80, normalize=true, label="")
+	p2=plot(xx, postxx/1.5, linewidth=2, label="I=500")
+	histogram!(p2, mcsample[1:500], bins = 100, normalize=true, label="")
 	
-# 	p3=plot(xx, postxx/1.5, linewidth=2, label="I=1000")
-# 	histogram!(p3, mcsample[1:1000], bins = 100, normalize=true, label="")
+	p3=plot(xx, postxx/1.5, linewidth=2, label="I=1000")
+	histogram!(p3, mcsample[1:1000], bins = 100, normalize=true, label="")
 
-# 	p4=plot(xx, postxx/1.5, linewidth=2, label="I=5000")
-# 	histogram!(p4, mcsample[1:5000], bins = 100, normalize=true, label="")
-# 	plot(p1, p2, p3, p4)
+	p4=plot(xx, postxx/1.5, linewidth=2, label="I=5000")
+	histogram!(p4, mcsample[1:5000], bins = 100, normalize=true, label="")
+	plot(p1, p2, p3, p4)
 end
 
 # ╔═╡ d21773b6-fd4a-4218-98c0-150f53940348
 begin
 	mcsample100RW, arRW100 = MHRW(posterior1; σ2= 100, mc=5000);
 	mcsampl100RWChain = Chains(mcsample100RW);
-# 	with_terminal() do
-# 		print("acceptance rate for MHRW σ2 = 100 is: ", arRW100)
-# 	end
-# 	p1rw=plot(xx, postxx/1.5, linewidth=2, label="MHRW I=100")
-# 	histogram!(p1rw, mcsample100RW[1:100], bins = 80, normalize=true, label="")
-# 	p2rw=plot(xx, postxx/1.5, linewidth=2, label="MHRW I=500")
-# 	histogram!(p2rw, mcsample100RW[1:500], bins = 100, normalize=true, label="")
+	with_terminal() do
+		print("acceptance rate for MHRW σ2 = 100 is: ", arRW100)
+	end
+	p1rw=plot(xx, postxx/1.5, linewidth=2, label="MHRW I=100")
+	histogram!(p1rw, mcsample100RW[1:100], bins = 80, normalize=true, label="")
+	p2rw=plot(xx, postxx/1.5, linewidth=2, label="MHRW I=500")
+	histogram!(p2rw, mcsample100RW[1:500], bins = 100, normalize=true, label="")
 	
-# 	p3rw=plot(xx, postxx/1.5, linewidth=2, label="MHRW I=1000")
-# 	histogram!(p3rw, mcsample100RW[1:1000], bins = 100, normalize=true, label="")
+	p3rw=plot(xx, postxx/1.5, linewidth=2, label="MHRW I=1000")
+	histogram!(p3rw, mcsample100RW[1:1000], bins = 100, normalize=true, label="")
 
-# 	p4rw=plot(xx, postxx/1.5, linewidth=2, label="MHRW I=5000")
-# 	histogram!(p4rw, mcsample100RW[1:5000], bins = 150, normalize=true, label="")
-# 	plot(p1rw, p2rw, p3rw, p4rw)
+	p4rw=plot(xx, postxx/1.5, linewidth=2, label="MHRW I=5000")
+	histogram!(p4rw, mcsample100RW[1:5000], bins = 150, normalize=true, label="")
+	plot(p1rw, p2rw, p3rw, p4rw)
 end
 
 # ╔═╡ 6334edb5-c5b0-4868-8398-56c00646148a
 begin
-	# plot(mcsampl100RWChain)
+	plot(mcsampl100RWChain)
 end
 
 # ╔═╡ 29a3de2d-7706-4ea5-ada7-5da6d29c4f3e
-# begin
-# 	d1 = density(vec(mcsample[1:100]), label="I=100")
-# 	density!(vec(mcsample[1:500]), label="I=500")
-# 	# density!(vec(mcsample[1:1000]), label= "I=250")
-# 	density!(vec(mcsample[1:5000]), label="I=5000")
-# 	plot!(xx, postxx./4.35, linewidth=2, label="true")
-# end
+begin
+	d1 = density(vec(mcsample[1:100]), label="I=100")
+	density!(vec(mcsample[1:500]), label="I=500")
+	# density!(vec(mcsample[1:1000]), label= "I=250")
+	density!(vec(mcsample[1:5000]), label="I=5000")
+	plot!(xx, postxx./4.35, linewidth=2, label="true")
+end
 
 # ╔═╡ 275f72c2-ac3b-4d25-ae1f-931a7b0801c8
-# plot(mcsampl100Chain)
+plot(mcsampl100Chain)
 
 # ╔═╡ 608b70f9-8f7e-4dcd-a4ec-87358e7383ae
 begin
@@ -228,7 +222,7 @@ begin
 end
 
 # ╔═╡ aa314f7d-23c2-4dcb-97cd-945fe8995e55
-# plot(mcsampl10000Chain)
+plot(mcsampl10000Chain)
 
 # ╔═╡ dbfa7c16-0093-4131-b3e2-e76ade890fa5
 summarize(mcsampl1Chain)
@@ -267,22 +261,22 @@ begin
 end
 
 # ╔═╡ 1bd57c8f-e169-4359-9f51-cc733ce0bf19
-# begin
-# 	p1_=plot(xx, postxx/1.5, linewidth=2, label="I=100")
-# 	histogram!(p1_, splSA[1:100], bins = 80, normalize=true, label="")
-# 	p2_=plot(xx, postxx/1.5, linewidth=2, label="I=500")
-# 	histogram!(p2_, splSA[1:500], bins = 100, normalize=true, label="")
+begin
+	p1_=plot(xx, postxx/1.5, linewidth=2, label="I=100")
+	histogram!(p1_, splSA[1:100], bins = 80, normalize=true, label="")
+	p2_=plot(xx, postxx/1.5, linewidth=2, label="I=500")
+	histogram!(p2_, splSA[1:500], bins = 100, normalize=true, label="")
 	
-# 	p3_=plot(xx, postxx/1.5, linewidth=2, label="I=1000")
-# 	histogram!(p3_, splSA[1:1000], bins = 100, normalize=true, label="")
+	p3_=plot(xx, postxx/1.5, linewidth=2, label="I=1000")
+	histogram!(p3_, splSA[1:1000], bins = 100, normalize=true, label="")
 
-# 	p4_=plot(xx, postxx/1.5, linewidth=2, label="I=5000")
-# 	histogram!(p4_, splSA[1:5000], bins = 100, normalize=true, label="")
-# 	plot(p1_, p2_, p3_, p4_)
-# end
+	p4_=plot(xx, postxx/1.5, linewidth=2, label="I=5000")
+	histogram!(p4_, splSA[1:5000], bins = 100, normalize=true, label="")
+	plot(p1_, p2_, p3_, p4_)
+end
 
 # ╔═╡ 7b1cad31-5d80-4b18-a66e-6f69babf6f41
-# plot(splSA)
+plot(splSA)
 
 # ╔═╡ b85f10cb-3a94-4cb8-b7e0-d00d0a957e6a
 begin
@@ -354,10 +348,10 @@ begin
 end
 
 # ╔═╡ b43f0f7d-73df-4f85-a877-d2cb9c89c801
-# histogram(slsamples, nbin=100)
+histogram(slsamples, nbin=100)
 
 # ╔═╡ 1b5c1184-ec24-41d2-8e8f-662bc72cdb62
-# scatter(slsamples, uslsamples, m=:auto, markersize = 1)
+scatter(slsamples, uslsamples, m=:auto, markersize = 1)
 
 # ╔═╡ 9ff130c3-8c0d-4ce9-9908-ac836f97aadb
 # begin
@@ -479,7 +473,10 @@ begin
 end
 
 # ╔═╡ fb901676-0cc4-42e1-a38e-7d2a3d0d86ee
-rstfd = grad(central_fdm(5,1), (x) -> posteriorLR(x; m0=zeros(dim), V0=100 .* Matrix(I, dim, dim), X=XX, y=yy)[1], x00)[1]
+begin
+	x00 = rand(dim)
+	rstfd = grad(central_fdm(5,1), (x) -> posteriorLR(x; m0=zeros(dim), V0=100 .* Matrix(I, dim, dim), X=XX, y=yy)[1], x00)[1]
+end
 
 # ╔═╡ 8adf4b04-85a2-46fc-9814-0d213e80b57c
 begin	
@@ -683,7 +680,6 @@ plot(x,y,ppfLP,st=:surface, c=:roma)
 # ╟─b3042d59-2b22-40f6-9f44-3a092d2d52b6
 # ╠═0848f104-2a35-424f-8706-1fc5ab010481
 # ╠═63f5918c-fa02-4abf-a657-807506593f14
-# ╠═6a47c14a-d549-4dc3-b7b0-47f27d41cce9
 # ╠═9369c5db-79a0-4667-b6f3-583d720dee72
 # ╠═9d583ae3-1396-4529-b9c2-0dc4edeaa4b8
 # ╠═d21773b6-fd4a-4218-98c0-150f53940348
@@ -704,7 +700,7 @@ plot(x,y,ppfLP,st=:surface, c=:roma)
 # ╠═bd55f18c-fbf2-47d7-8936-f6fb54f9b45f
 # ╠═b43f0f7d-73df-4f85-a877-d2cb9c89c801
 # ╠═1b5c1184-ec24-41d2-8e8f-662bc72cdb62
-# ╠═9ff130c3-8c0d-4ce9-9908-ac836f97aadb
+# ╟─9ff130c3-8c0d-4ce9-9908-ac836f97aadb
 # ╟─9881e098-4b9a-402d-896e-74b5b1934da1
 # ╠═62769ead-22b4-4856-8f49-36d70943c018
 # ╠═209089a3-81f7-438c-9770-a0d51833252c

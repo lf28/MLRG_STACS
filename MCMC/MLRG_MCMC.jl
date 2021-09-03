@@ -9,9 +9,13 @@ begin
 	cd(@__DIR__)
 	using Pkg
 	Pkg.activate(".")
-	Pkg.add("StatsPlots")
+	# Pkg.add("StatsPlots")
+	# Pkg.add("PlotlyBase")
+	Pkg.add("PlotlyJS")
 	using Distributions, Random, MCMCChains, Plots
-	plotly()
+	# plotly()
+	# gr()
+	plotlyjs()
 	using StatsPlots
 	using LinearAlgebra
 end
@@ -32,6 +36,17 @@ md"""
 4. To make Bayesian inference on a logistic regression model; what is the model ? what inference options do you we have ? Do we need to use MCMC ?
 
 """
+
+# ╔═╡ bf080163-c162-4060-badc-3f3ff1ffae99
+#= md"""
+The likelihood is
+
+$$P(y|x, w) = \text{Bernoulli}(\sigma(x^{\top} w); y)= \sigma(x^{\top} w)^y(1-\sigma(x^{\top} w))^{1-y}$$
+
+The prior is over $w$
+
+$$P(w) = N(m_0, V_0)$$
+""" =#
 
 # ╔═╡ 797629b6-0669-11ec-3778-d1f20c3d6a4c
 md"""# MCMC: exercises
@@ -94,6 +109,26 @@ begin
 		return plt
 	end
 	showQ1(1, 1, 10)
+end
+
+# ╔═╡ f5b800f9-4718-410a-90ca-ebc01ddebcbd
+begin
+	ns = [0, 5, 10, 20, 50, 100, 300]
+	DD = rand(Poisson(trueλ1), 300)
+	# df = 2
+	 
+	# anim = @animate for i = 1:df:length(x)
+	#     plot(x[1:i], y[1:i], legend=false)
+	# end
+	
+	anim = @animate for i = 1:length(ns)
+		if i ==1
+			plot()
+		end
+	    plot!(Gamma(1+ sum(DD[1:ns[i]]), 1/(1 + ns[i])), legend=false)
+		# plot(Gamma(1,1))
+	end
+	gif(anim, "tutorial_anim_fps30.gif", fps = 1)
 end
 
 # ╔═╡ d6a367e4-3a76-4a21-85ee-36cafc2a4749
@@ -230,13 +265,15 @@ You are given data set $D_{4b}$, a sample of N blood count observations. The sen
 """
 
 # ╔═╡ Cell order:
-# ╠═71d93c0d-0e4a-4684-8a54-6e25c2606a2b
+# ╟─71d93c0d-0e4a-4684-8a54-6e25c2606a2b
 # ╟─fef01c13-fc9e-45f7-9959-0a740f27b458
+# ╠═bf080163-c162-4060-badc-3f3ff1ffae99
 # ╟─797629b6-0669-11ec-3778-d1f20c3d6a4c
 # ╟─4570ae10-8419-4af4-aea6-c5fc05756617
 # ╟─13cb28fb-6b72-4ccf-9a2e-aec107ccd04b
 # ╟─92d4bbd4-a7c1-426a-8c26-a40a4cb37cff
-# ╟─c900698d-577d-4d42-bee5-823724771d38
+# ╠═c900698d-577d-4d42-bee5-823724771d38
+# ╠═f5b800f9-4718-410a-90ca-ebc01ddebcbd
 # ╠═d6a367e4-3a76-4a21-85ee-36cafc2a4749
 # ╟─493d8a65-744d-4ea2-80d1-01e429643916
 # ╠═2aabe7b7-6381-4e78-b0d2-a25aa7d55d68
