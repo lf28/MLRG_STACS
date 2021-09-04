@@ -463,12 +463,8 @@ begin
 
 	function posteriorLR(w0, w1; m0, V0, X, y)
 		w = [w0, w1]
-		σ = logistic.(X * w)
-		Λ0 = inv(V0)
-		grad = - inv(V0) * (w-m0) + X' * (y - σ)
-		d = σ .* (σ .- 1)
-		H = (X .* d)' * X - Λ0
-		return logpdf(MvNormal(m0, V0), w) + sum(logpdf.(Bernoulli.(σ), y))
+		logpost, _ , _ = posteriorLR(w; m0=m0, V0=V0, X=X, y=y)
+		return logpost
 	end
 end
 
