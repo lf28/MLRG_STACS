@@ -39,18 +39,15 @@ md"""
 
 4. To make Bayesian inference on a logistic regression model; what is the model ? what inference options do you we have ? Do we need to use MCMC ?
 
+
 """
 
-# ╔═╡ bf080163-c162-4060-badc-3f3ff1ffae99
-#= md"""
-The likelihood is
+# ╔═╡ 00ea7c39-8b1b-4755-8d27-2693639b7d03
+md"""
+The likelihood is $$P(y|x, w) = \text{Bernoulli}(\sigma(x^{\top} w); y)= \sigma(x^{\top} w)^y(1-\sigma(x^{\top} w))^{1-y}$$
 
-$$P(y|x, w) = \text{Bernoulli}(\sigma(x^{\top} w); y)= \sigma(x^{\top} w)^y(1-\sigma(x^{\top} w))^{1-y}$$
-
-The prior is over $w$
-
-$$P(w) = N(m_0, V_0)$$
-""" =#
+One possible prior is $w$: $$P(w) = N(m_0, V_0)$$
+"""
 
 # ╔═╡ 797629b6-0669-11ec-3778-d1f20c3d6a4c
 md"""# MCMC: exercises
@@ -71,6 +68,8 @@ $$P(X=k|\lambda) = \frac{\lambda^k e^{-\lambda}}{k!},$$ where $\lambda >0$ is th
 
 - what the effect of observation size $n$ has on the posterior ?
 - how to interpret the prior hyperparameters $a_0$ and $b_0$ (assuming Gamma is used as the prior), i.e.  $$P(\lambda) = \text{Gamma}(a_0,b_0)$$?
+- is this a MCMC method ? 
+- what if I do not use Gamma as a prior; what other prior distributions are appropriate ? say, can I use Gaussian as a prior? how to sample the posterior now?
 """
 
 # ╔═╡ 13cb28fb-6b72-4ccf-9a2e-aec107ccd04b
@@ -153,8 +152,17 @@ end
 md"""
 ## Question 2 (Missing data handling)
 You are given data set $D_2$, a sample of another n=100 counting data (i.e. $d_i \in \{0,1,2,\ldots\}$), which are assumed Poisson distributed. To put the problem into some real world perspective, let's assume $d_i$ is blood count measurements of some patient. However, the sensor that made the observations is not reliable: some observations are missing at random. Make Bayesian inference over the mean $\lambda$ of the Poisson. 
-!!! warning "... more advanced question to think about"
-    what if the observation is multivariate Gaussian?
+!!! hint 
+    Write down the unknown variables; what is the statistical model or data generating process ? Then use Gibbs sampling to solve the problem.
+
+- We can instead solve the problem *ad hoc*ly 
+    1. you may simply ignore the missing data and just use the observed data to make a Bayesian inference (Q1's sampler)
+    2. the other is to use sample mean of the observed data to replace those missing data; then use Q1's sampler 
+- Can you see the benefit of full Bayesian inference ?
+
+!!! warning "How about EM ?"
+	Can you solve the problem by using EM algorithm ?
+
 """
 
 # ╔═╡ 2aabe7b7-6381-4e78-b0d2-a25aa7d55d68
@@ -175,7 +183,7 @@ md"""
 You are given data set $D_{2b}$, a sample of n multivariate Guassian samples (6-dimensional), the Gaussian has some unknown mean and variance: $\mu, \Sigma$. However, some observations are missing at random. Make Bayesian inference over the mean and variance of the Gaussian. 
 
 !!! hint
-    What are the missing or unknown values here ? Write down the data generating process. You may need to use conditional Gaussian distribution. Check wiki for its identity. 
+    What are the missing or unknown values here and what are their posterior distributions ? Write down the data generating process. You may need to use conditional Gaussian distribution. Check wikipedia or MLAPP Chapter 4 for its identity. 
 """
 
 # ╔═╡ 800744f2-afcd-4129-9575-929112063dff
@@ -201,7 +209,7 @@ end
 # ╔═╡ 91c3b329-68b8-411c-bfcf-3bd7715050fd
 md"""
 ## Question 3 (Change point detection)
-You are given data set $D_3=[d_1, d_2, \ldots, d_T]$, a time series of T blood count observations. Let's assume the data is blood count measurements of some patient over time. The patient has taken some treatment at some unknown point $t_0 \in [1, T)$. Assume his/her blood count changes significantly before and after the treament, which implies you should model the two period's blood counts $D_{30}=\{d_1, \ldots, d_{t_0 -1}\}$ and $D_{31}=\{d_{t_0}, \ldots, d_T\}$ as two Poissons, $\lambda_0$, $\lambda_1$. When did he take the treament, and what is the change of the blood count? 
+You are given data set $D_3=[d_1, d_2, \ldots, d_T]$, a time series of T blood count observations. Let's assume the data is blood count measurements of some patient over time. The patient has taken some treatment at some unknown point $t_0 \in [1, T)$. Assume his/her blood count changes significantly before and after the treament, which implies you should model the two period's blood counts $D_{30}=\{d_1, \ldots, d_{t_0 -1}\}$ and $D_{31}=\{d_{t_0}, \ldots, d_T\}$ as two Poissons with means $\lambda_0$, $\lambda_1$. When did he take the treament, and what is the change of the blood count? 
 
 !!! hint 
 	what is the generative probabilistic model here ? what are the unknown or hidden random variables ? You may need to use Q1's result here. 
@@ -231,7 +239,7 @@ Now let's consider a more interesting problem where the change point $t_0$ is no
 
 
 !!! hint 
-	You need to use Metropolis-Hasting sampling to sample the non-standard distribution of $t_0$.
+	You need to use Metropolis-Hasting sampling to sample the non-standard distribution of $t_0$. 
 
 """
 
@@ -309,33 +317,42 @@ You are given data set $D_{4b}$, a sample of N blood count observations. The sen
 md"""
 ## Question 4c (Truncated with random noise)
 Let's check one more variant: $D_{4c}$, a sample of N=500 blood count observations. The sensor that made the observation is even worse: when the observation is small, say $d < h$, the sensor just report random noise between the range $[0, h-1]$. $D_{4c}$ is plotted below. The true truncation value is 70 in this case, so most of the observations are actually noise (blue bars between 0 and 69); only a tiny proportion of the data is real samples from the Poisson distribution. Can you still estimate the detection range $h$ and the true blood count rate reliably ?
-
-!!! warning "which scenario is harder ?"
-	All the three cases are different. But intuition tells us Q4c is harder than Q4a and Q4b. Can you use Bayesian method to demonstrate it? So previous question tells us extra information can be informative but this question actually asks us whether any extra information, even noise, is helpful ? 
+ 
 """
 
 # ╔═╡ 96ad83c3-5e79-4749-9fb3-d129929ce844
 begin
-	histogram(D4_, normed= true, label ="True data", nbin =30)
-	histogram!(D4, normed=true, label="Data 4a")
-	histogram!(D4c, normed= true, label ="Data 4c", nbin=60)
+	histogram(D4_, normed= true, label ="True data noralised", nbin =30, legend=:topleft)
+	histogram!(D4, normed=true, label="Data 4a noralised")
+	histogram!(D4c, normed= true, label ="Data 4c noralised", nbin=60)
+	vline!([h], label="Detection limit", linewidth=3, linecolor=:black)
 end
 
 # ╔═╡ d568ef74-50ee-4fe0-bdc1-3884eb85152a
 md"""
-The following is the trace plot of $D_{4c}$. The inference question essentially asks you to find out those true observations from the whole dataset. 
+The following is the trace plot of $D_{4c}$. The inference question essentially asks you to find out those true observations from the other random noise. 
 """
 
 # ╔═╡ 6f7b5eeb-2902-4d3c-bd8e-1cafc3d4fcaa
-plot(D4c)
+begin
+	plot(D4c, label="observations")
+	scatter!(findall(D4c .> h), D4c[D4c .> h], markersize=3, markershape=:cross, label="real observatioins")
+	hline!([h], linewidth=2, linecolor=:black, label="detection limit")
+end
+
+# ╔═╡ 270d4984-1a55-4324-8d73-1d5e37fc7553
+md"""
+!!! warning "which scenario is harder ?"
+	All the three cases are different. But intuition tells us Q4c is harder than Q4a and Q4b. Can you use Bayesian method to demonstrate it? So previous question tells us extra information can be informative but this question actually asks us whether any extra information, even noise, is helpful ?
+"""
 
 # ╔═╡ Cell order:
 # ╟─71d93c0d-0e4a-4684-8a54-6e25c2606a2b
 # ╟─d1049814-de3d-4bcd-be42-2076fb4abae8
 # ╟─fef01c13-fc9e-45f7-9959-0a740f27b458
-# ╠═bf080163-c162-4060-badc-3f3ff1ffae99
+# ╟─00ea7c39-8b1b-4755-8d27-2693639b7d03
 # ╟─797629b6-0669-11ec-3778-d1f20c3d6a4c
-# ╠═4570ae10-8419-4af4-aea6-c5fc05756617
+# ╟─4570ae10-8419-4af4-aea6-c5fc05756617
 # ╟─13cb28fb-6b72-4ccf-9a2e-aec107ccd04b
 # ╟─92d4bbd4-a7c1-426a-8c26-a40a4cb37cff
 # ╠═c900698d-577d-4d42-bee5-823724771d38
@@ -356,3 +373,4 @@ plot(D4c)
 # ╟─96ad83c3-5e79-4749-9fb3-d129929ce844
 # ╟─d568ef74-50ee-4fe0-bdc1-3884eb85152a
 # ╟─6f7b5eeb-2902-4d3c-bd8e-1cafc3d4fcaa
+# ╟─270d4984-1a55-4324-8d73-1d5e37fc7553
