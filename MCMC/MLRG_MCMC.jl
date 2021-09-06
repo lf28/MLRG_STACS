@@ -19,6 +19,8 @@ begin
 	using StatsPlots
 	using LinearAlgebra
 	using PlutoUI
+	Random.seed!(1234);
+	print()
 end
 
 # ╔═╡ d1049814-de3d-4bcd-be42-2076fb4abae8
